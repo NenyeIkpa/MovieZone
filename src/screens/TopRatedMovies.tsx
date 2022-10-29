@@ -14,7 +14,7 @@ import { TopRatedMoviesContext } from '../../App';
 
 
 const SearchContainer = styled.View`
-backgroundColor: orange;
+backgroundColor: green;
 padding: 20px;
 marginVertical: 10px;
 `;
@@ -65,7 +65,7 @@ setSearchQuery(query);
 }
 
   return (
-    <SafeArea style={{backgroundColor: 'orange'}} >
+    <SafeArea style={{backgroundColor: 'green'}} >
       <SearchContainer>
         <Searchbar 
         placeholder="Search"

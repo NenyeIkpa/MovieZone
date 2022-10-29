@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
+import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import styled from 'styled-components/native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import { SafeArea } from '../utils/safe-area';
@@ -14,7 +16,7 @@ import { PopularMoviesContext, TopRatedMoviesContext } from '../../App';
 
 
 const SearchContainer = styled.View`
-backgroundColor: orange;
+backgroundColor: blue;
 padding: 20px;
 marginVertical: 10px;
 `;
@@ -33,12 +35,10 @@ export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
-export const PopularMovies = ({children}) => {
+export const PopularMovies = ({navigation}) => {
   // const [fontsLoaded] = useFonts({
   //   'BlackAndWhitePicture-Regular': require('../../assets/fonts/BlackAndWhitePicture-Regular.ttf'),
   // });
-
-  const renderItem: ListRenderItem<IMovie> = ({item}) => <MovieCard movie={item} />;
 
   const [appIsReady, setAppIsReady] = useState(false);
   
@@ -55,6 +55,8 @@ export const PopularMovies = ({children}) => {
            // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync({
           'BlackAndWhitePicture-Regular': require('../../assets/fonts/BlackAndWhitePicture-Regular.ttf'),
+          'Lato-Light': require('../../assets/fonts/Lato-Light.ttf'),
+          'Lato-Regular': require('../../assets/fonts/Lato-Regular.ttf'),
         });
 
         const response = await fetch(
@@ -111,9 +113,10 @@ setFilteredPopularMovies(masterPopularMovies);
 setSearchQuery(query);
 }
 }
+const renderItem: ListRenderItem<IMovie> = ({item}) =>    <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item }))}>{<MovieCard movie={item} /> }</TouchableOpacity>;
 
   return (
-    <SafeArea style={{backgroundColor: 'orange'}} onLayout={onLayoutRootView}>
+    <SafeArea onLayout={onLayoutRootView}>
       <SearchContainer>
         <Searchbar 
         placeholder="Search"

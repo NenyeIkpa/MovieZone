@@ -27,7 +27,7 @@ const photoUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
 // console.log(movie.release_date)
     return(
         <FilmCard elevation={5}>
-            <Card.Cover source={{uri : photoUrl}} />
+            <Card.Cover source={{uri : photoUrl}} style={{resizeMode: 'contain'}} />
             <Card.Title 
             title={`Title: ${movie.title}`} 
             subtitle={`Release date: ${movie.release_date}`} 
