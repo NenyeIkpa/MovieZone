@@ -16,7 +16,7 @@ import { PopularMoviesContext, TopRatedMoviesContext } from '../../App';
 
 
 const SearchContainer = styled.View`
-backgroundColor: blue;
+backgroundColor: skyblue;
 padding: 20px;
 marginVertical: 10px;
 `;
@@ -113,10 +113,10 @@ setFilteredPopularMovies(masterPopularMovies);
 setSearchQuery(query);
 }
 }
-const renderItem: ListRenderItem<IMovie> = ({item}) =>    <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item }))}>{<MovieCard movie={item} /> }</TouchableOpacity>;
+const renderItem: ListRenderItem<IMovie> = ({item}) =>    <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item , initialRouteName : 'PopularMovies'}))}>{<MovieCard movie={item} /> }</TouchableOpacity>;
 
   return (
-    <SafeArea onLayout={onLayoutRootView}>
+    <SafeArea style={{backgroundColor: 'skyblue'}} onLayout={onLayoutRootView}>
       <SearchContainer>
         <Searchbar 
         placeholder="Search"

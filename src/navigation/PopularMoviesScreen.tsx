@@ -19,6 +19,7 @@ export const PopularMoviesScreen = () => {
             <PopularMoviesStack.Screen
             name="MovieDetails"
             component={MovieDetails}
+            getId={({ params }) => params.initialRouteName}
             options={{headerTitle : 'Details', animation: 'simple_push', headerShown: true }}
             />
         </PopularMoviesStack.Navigator>

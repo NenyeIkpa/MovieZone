@@ -8,7 +8,6 @@ const DetailsContainer = styled.View`
 flex: 1;
 justifyContent: center;
 alignItems: center;
-backgroundColor: blue
 `;
 
 const Overview = styled.Text`
@@ -22,14 +21,17 @@ const ImageStyle = styled.Image`
 height: 80%;
 width: 90%;
 padding: 5px;
-backgroundColor: white;
+backgroundColor: black;
 resizeMode: cover;
 `;
 
 
 export const MovieDetails = ({ navigation, route}) => {
     const item = route.params.paramKey;
+    const initialRoute = route.params.initialRouteName
     const photoUrl = `https://image.tmdb.org/t/p/original${item.poster_path}`;
+    const isPopularMoviesScreen = initialRoute === 'PopularMovies';
+    console.log(isPopularMoviesScreen);
 
     useEffect(() => {
         // hides bottom nav
@@ -43,7 +45,7 @@ export const MovieDetails = ({ navigation, route}) => {
         });
       }, [navigation]);
     return (
-        <SafeArea>
+        <SafeArea style={{ backgroundColor: isPopularMoviesScreen ? 'skyblue' : 'beige' }}>
             <DetailsContainer>
                 <ImageStyle  source={{ uri : photoUrl }} />
                     <Overview>{item.overview}</Overview>

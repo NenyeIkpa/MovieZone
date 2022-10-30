@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { FlatList, ListRenderItem } from 'react-native';
+import { FlatList, ListRenderItem , TouchableOpacity} from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -14,7 +14,7 @@ import { TopRatedMoviesContext } from '../../App';
 
 
 const SearchContainer = styled.View`
-backgroundColor: green;
+backgroundColor: beige;
 padding: 20px;
 marginVertical: 10px;
 `;
@@ -29,12 +29,10 @@ export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
   padding: 20px;
 `;
 
-export const TopRatedMovies = ({ children }) => {
+export const TopRatedMovies = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const { masterTopRatedMovies }= useContext(TopRatedMoviesContext);
     const[filteredTopRatedMovies, setFilteredTopRatedMovies]= useState(masterTopRatedMovies);
-    
-  const renderItem: ListRenderItem<IMovie> = ({item}) => <MovieCard movie={item} />;
 
 //   const [topRatedMovies, settopRatedMovies] = useState(masterTopRatedMovies);
   console.log("masterTopRatedMovies are", masterTopRatedMovies)
@@ -64,8 +62,10 @@ setSearchQuery(query);
 }
 }
 
+const renderItem: ListRenderItem<IMovie> = ({item}) => <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item }))}><MovieCard movie={item} /></TouchableOpacity>;
+
   return (
-    <SafeArea style={{backgroundColor: 'green'}} >
+    <SafeArea style={{backgroundColor: 'beige'}} >
       <SearchContainer>
         <Searchbar 
         placeholder="Search"
