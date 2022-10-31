@@ -9,6 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { PopularMoviesScreen } from './src/navigation/PopularMoviesScreen'
 import { TopRatedMoviesScreen } from './src/navigation/TopRatedMoviesScreen';
+import { LaunchScreen } from './src/screens/LaunchScreen'
 
 export const PopularMoviesContext = createContext(null);
 export const TopRatedMoviesContext = createContext(null);
