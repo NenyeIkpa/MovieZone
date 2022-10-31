@@ -17,7 +17,8 @@ import { PopularMoviesContext, TopRatedMoviesContext } from '../../App';
 
 const SearchContainer = styled.View`
 backgroundColor: skyblue;
-padding: 20px;
+paddingHorizontal: 20px;
+paddingVertical: 20px;
 marginVertical: 10px;
 `;
 
@@ -29,7 +30,7 @@ marginVertical: 10px;
 
 
 export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
-  padding: 20px;
+  flex: 1;
 `;
 
 // Keep the splash screen visible while we fetch resources
@@ -41,13 +42,14 @@ export const PopularMovies = ({navigation}) => {
   // });
 
   const [appIsReady, setAppIsReady] = useState(false);
-  
 
+  const [pagePopular, setPagePopular] = useState(1);
+  const [pageTopRated] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredPopularMovies, setFilteredPopularMovies] = useState([]);
   const { masterPopularMovies, setMasterPopularMovies} = useContext(PopularMoviesContext);
   const{ setMasterTopRatedMovies }= useContext(TopRatedMoviesContext);
-  console.log("masterPopularMovies are", masterPopularMovies);
+  console.log("masterPopularMovies are", masterPopularMovies.length);
 
   useEffect(() => {
     async function prepare() {
@@ -58,18 +60,20 @@ export const PopularMovies = ({navigation}) => {
           'Lato-Light': require('../../assets/fonts/Lato-Light.ttf'),
           'Lato-Regular': require('../../assets/fonts/Lato-Regular.ttf'),
         });
-
+      
         const response = await fetch(
-          'https://api.themoviedb.org/3/movie/popular?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=1'
+          `https://api.themoviedb.org/3/movie/popular?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=${pagePopular}`
         );
         const json = await response.json();
         console.log(json.results);
         setFilteredPopularMovies(json.results);
         setMasterPopularMovies(json.results);
+    
 
-        const response2 = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=1')
+        const response2 = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=${pageTopRated}`)
         const topRated = await response2.json();
         setMasterTopRatedMovies(topRated.results);
+
       }catch (e) {
       console.warn(e);
     }finally {
@@ -125,8 +129,10 @@ const renderItem: ListRenderItem<IMovie> = ({item}) =>    <TouchableOpacity onPr
         </SearchContainer>
       <MovieList 
        data={filteredPopularMovies}
+       onEndReachedThreshold={0.5}
+       onEndReached={() => { pagePopular < 5 && setPagePopular(pagePopular + 1)}}
        renderItem={renderItem}
-       keyExtractor={( item : IMovie, index: number) => item.id}
+       keyExtractor={( item : IMovie, index: number) => index.toString()}
       />
     </SafeArea>
   );

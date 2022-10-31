@@ -15,7 +15,8 @@ import { TopRatedMoviesContext } from '../../App';
 
 const SearchContainer = styled.View`
 backgroundColor: beige;
-padding: 20px;
+paddingHorizontal: 20px;
+paddingVertical: 20px;
 marginVertical: 10px;
 `;
 
@@ -26,12 +27,13 @@ marginVertical: 10px;
 // })``;
 
 export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
-  padding: 20px;
+  flex: 1;
 `;
 
 export const TopRatedMovies = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const { masterTopRatedMovies }= useContext(TopRatedMoviesContext);
+    const { masterTopRatedMovies, pageTopRated }= useContext(TopRatedMoviesContext);
+    const [pagerTopRated, setPagerTopRated] = useState(pageTopRated);
     const[filteredTopRatedMovies, setFilteredTopRatedMovies]= useState(masterTopRatedMovies);
 
 //   const [topRatedMovies, settopRatedMovies] = useState(masterTopRatedMovies);
@@ -74,6 +76,8 @@ const renderItem: ListRenderItem<IMovie> = ({item}) => <TouchableOpacity onPress
         </SearchContainer>
       <MovieList 
        data={filteredTopRatedMovies}
+       onEndReachedThreshold={0.5}
+       onEndReached={() => {pagerTopRated<5 && setPagerTopRated(pagerTopRated + 1)}}
        renderItem={renderItem}
        keyExtractor={( item : IMovie, index: number) => item.id}
       />

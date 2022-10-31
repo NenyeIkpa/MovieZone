@@ -4,6 +4,7 @@ import React from 'react';
 import { PopularMovies } from '../screens/PopularMovies';
 
 import { MovieDetails } from '../screens/MovieDetails';
+import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
 const PopularMoviesStack = createNativeStackNavigator();
 
@@ -19,8 +20,7 @@ export const PopularMoviesScreen = () => {
             <PopularMoviesStack.Screen
             name="MovieDetails"
             component={MovieDetails}
-            getId={({ params }) => params.initialRouteName}
-            options={{headerTitle : 'Details', animation: 'simple_push', headerShown: true }}
+            options={{headerTitle : 'Details', animation: 'simple_push', headerShown: true, headerStyle: {backgroundColor : 'skyblue'}}}
             />
         </PopularMoviesStack.Navigator>
     )

@@ -19,7 +19,7 @@ export const TopRatedMoviesScreen = () => {
             <TopRatedMoviesStack.Screen
             name="MovieDetails"
             component={MovieDetails}
-            options={{headerTitle : 'Details', animation: 'simple_push'}}
+            options={{headerTitle : 'Details', animation: 'simple_push', headerStyle: {backgroundColor : 'beige'}, footerStyle: {backgroundColor : 'beige'}}}
             />
         </TopRatedMoviesStack.Navigator>
     )

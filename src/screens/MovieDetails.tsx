@@ -1,5 +1,5 @@
 import React, { useContext, useEffect} from 'react';
-import { View, Text, Image} from 'react-native';
+import { View, Text, Image, SafeAreaView} from 'react-native';
 import styled from 'styled-components/native';
 import { PopularMoviesContext } from '../../App';
 import { SafeArea } from '../utils/safe-area';
@@ -14,7 +14,6 @@ const Overview = styled.Text`
 fontFamily: Lato-Regular;
 fontSize: 16px;
 padding: 16px;
-alignItems: 'spread';
 `;
 
 const ImageStyle = styled.Image`
@@ -45,11 +44,13 @@ export const MovieDetails = ({ navigation, route}) => {
         });
       }, [navigation]);
     return (
+      <>
         <SafeArea style={{ backgroundColor: isPopularMoviesScreen ? 'skyblue' : 'beige' }}>
             <DetailsContainer>
                 <ImageStyle  source={{ uri : photoUrl }} />
                     <Overview>{item.overview}</Overview>
                 </DetailsContainer>
         </SafeArea>
+        </>
     )
 };
