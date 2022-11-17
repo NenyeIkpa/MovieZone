@@ -78,8 +78,7 @@ console.log("filtered movies for popular movies screen ",filteredPopularMovies.l
         onChangeText={(text) => onSearch(text)}
         />
         </SearchContainer>
-        { isToggled &&
-         (<FavouritesView favourites={} />)}
+      
       <FlatList 
        data={filteredPopularMovies}
        onEndReachedThreshold={0.1}
