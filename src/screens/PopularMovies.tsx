@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { FlatList, ListRenderItem, TouchableOpacity } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -10,10 +10,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { SafeArea } from '../utils/safe-area';
 import { MovieCard } from '../components/movie-card';
-import { IMovie, DATA } from '../data/IMovie';
-import { Search} from '../components/search';
-import { PopularMoviesContext, TopRatedMoviesContext } from '../../App';
-
+import { IMovie } from '../data/IMovie';
+import { PopularMoviesContext }  from '../../App';
+import { FavouritesView } from '../components/favourites-view';
 
 const SearchContainer = styled.View`
 backgroundColor: skyblue;
@@ -29,111 +28,67 @@ marginVertical: 10px;
 // })``;
 
 
-export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
-  flex: 1;
+const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
+  padding: 5px;
+  border-width: 2px;
 `;
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
-
 export const PopularMovies = ({navigation}) => {
-  // const [fontsLoaded] = useFonts({
-  //   'BlackAndWhitePicture-Regular': require('../../assets/fonts/BlackAndWhitePicture-Regular.ttf'),
-  // });
 
-  const [appIsReady, setAppIsReady] = useState(false);
-
-  const [pagePopular, setPagePopular] = useState(1);
-  const [pageTopRated] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPopularMovies, setFilteredPopularMovies] = useState([]);
-  const { masterPopularMovies, setMasterPopularMovies} = useContext(PopularMoviesContext);
-  const{ setMasterTopRatedMovies }= useContext(TopRatedMoviesContext);
-  console.log("masterPopularMovies are", masterPopularMovies.length);
+  const popularMovies= useContext(PopularMoviesContext)
+  const [filteredPopularMovies, setFilteredPopularMovies] = useState(popularMovies)
+  const [isToggled, setIsToggled] = useState(false);
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-           // Pre-load fonts, make any API calls you need to do here
-        await Font.loadAsync({
-          'BlackAndWhitePicture-Regular': require('../../assets/fonts/BlackAndWhitePicture-Regular.ttf'),
-          'Lato-Light': require('../../assets/fonts/Lato-Light.ttf'),
-          'Lato-Regular': require('../../assets/fonts/Lato-Regular.ttf'),
-        });
-      
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/popular?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=${pagePopular}`
-        );
-        const json = await response.json();
-        console.log(json.results);
-        setFilteredPopularMovies(json.results);
-        setMasterPopularMovies(json.results);
-    
+  const onFavouritesToggle=() =>{ setIsToggled(!isToggled)}
 
-        const response2 = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=697855141b5a270bfc67144c1c8a2c38&language=en-US&page=${pageTopRated}`)
-        const topRated = await response2.json();
-        setMasterTopRatedMovies(topRated.results);
-
-      }catch (e) {
-      console.warn(e);
-    }finally {
-      // Tell the application to render
-      setAppIsReady(true);
-    }
-  } prepare();
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
-    return null;
-  }
-
-
-  const onChangeSearch =( query : string ) => {
+  const onSearch = (searchQuery : string) => {
     // Check if searched text is not blank
-   if(query) {
-       // Inserted text is not blank
+   if(searchQuery) {
+    // Inserted text is not blank
 // Filter the masterData and update FilteredData
-const newData = masterPopularMovies.filter((item : IMovie) => {
-   // Applying filter for the inserted text in search bar
-   const itemData = item.title
-       ? item.title.toUpperCase()
-       : ''.toUpperCase();
-   const queryData = query.toUpperCase();
-   return itemData.indexOf(queryData) > -1;
- }
+const NewPopularMovies = popularMovies.filter((movie : IMovie) => {
+// Applying filter for the inserted text in search bar
+const movieTitle = movie.title
+    ? movie.title.toUpperCase()
+    : ''.toUpperCase();
+const queryData = searchQuery.toUpperCase();
+return movieTitle.indexOf(queryData) > -1;
+}
 );
-setFilteredPopularMovies(newData);
-setSearchQuery(query);
+setFilteredPopularMovies(NewPopularMovies);
+setSearchQuery(searchQuery);
 } else {
 // Inserted text is blank
 // Update FilteredDataSource with masterDataSource
-setFilteredPopularMovies(masterPopularMovies);
-setSearchQuery(query);
+setFilteredPopularMovies(popularMovies);
+setSearchQuery(searchQuery);
 }
-}
-const renderItem: ListRenderItem<IMovie> = ({item}) =>    <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item , initialRouteName : 'PopularMovies'}))}>{<MovieCard movie={item} /> }</TouchableOpacity>;
+};
+console.log("filtered movies for popular movies screen ",filteredPopularMovies.length, filteredPopularMovies)
 
   return (
-    <SafeArea style={{backgroundColor: 'skyblue'}} onLayout={onLayoutRootView}>
+     <View style={{flex: 1, backgroundColor: 'skyblue'}}>
       <SearchContainer>
         <Searchbar 
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}/>
+        icon={isToggled? 'heart': 'heart-outline'}
+        onIconPress={onFavouritesToggle}
+        placeholder="Search through popular movies"
+        value={searchQuery}
+        onChangeText={(text) => onSearch(text)}
+        />
         </SearchContainer>
-      <MovieList 
+        { isToggled &&
+         (<FavouritesView favourites={} />)}
+      <FlatList 
        data={filteredPopularMovies}
-       onEndReachedThreshold={0.5}
-       onEndReached={() => { pagePopular < 5 && setPagePopular(pagePopular + 1)}}
-       renderItem={renderItem}
-       keyExtractor={( item : IMovie, index: number) => index.toString()}
+       onEndReachedThreshold={0.1}
+       onEndReached={() => {}}
+       renderItem={({item}) => 
+       <MovieCard movie={item} handlePress={(() => navigation.navigate('MovieDetails', { paramKey : item, initialRouteName: "popular" }))} />
+     }
+      //  keyExtractor={( item : IMovie) => item.id}
       />
-    </SafeArea>
+      </View>
   );
 };
