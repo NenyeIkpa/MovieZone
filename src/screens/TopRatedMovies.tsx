@@ -1,20 +1,17 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { FlatList, ListRenderItem , TouchableOpacity} from 'react-native';
+import { FlatList, View} from 'react-native';
 import { Searchbar } from 'react-native-paper';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import styled from 'styled-components/native';
 
 
 import { SafeArea } from '../utils/safe-area';
 import { MovieCard } from '../components/movie-card';
-import { IMovie, DATA } from '../data/IMovie';
-import { Search} from '../components/search';
+import { IMovie} from '../data/IMovie';
 import { TopRatedMoviesContext } from '../../App';
 
 
 const SearchContainer = styled.View`
-backgroundColor: beige;
+backgroundColor: skyblue;
 paddingHorizontal: 20px;
 paddingVertical: 20px;
 marginVertical: 10px;
@@ -31,56 +28,57 @@ export const MovieList = styled(FlatList as new () => FlatList<IMovie>)`
 `;
 
 export const TopRatedMovies = ({ navigation }) => {
+    const topRatedMovies = useContext(TopRatedMoviesContext);
+    const [filteredTopRatedMovies, setFilteredTopRatedMovies] = useState(topRatedMovies);
     const [searchQuery, setSearchQuery] = useState('');
-    const { masterTopRatedMovies, pageTopRated }= useContext(TopRatedMoviesContext);
-    const [pagerTopRated, setPagerTopRated] = useState(pageTopRated);
-    const[filteredTopRatedMovies, setFilteredTopRatedMovies]= useState(masterTopRatedMovies);
 
-//   const [topRatedMovies, settopRatedMovies] = useState(masterTopRatedMovies);
-  console.log("masterTopRatedMovies are", masterTopRatedMovies)
+  console.log("topRatedMovies are", topRatedMovies)
 
-
-  const onChangeSearch =( query : string ) => {
+  const onSearch = (searchQuery : string) => {
     // Check if searched text is not blank
-   if(query) {
-       // Inserted text is not blank
+   if(searchQuery) {
+    // Inserted text is not blank
 // Filter the masterData and update FilteredData
-const newData = masterTopRatedMovies.filter((item : IMovie) => {
-   // Applying filter for the inserted text in search bar
-   const itemData = item.title
-       ? item.title.toUpperCase()
-       : ''.toUpperCase();
-   const queryData = query.toUpperCase();
-   return itemData.indexOf(queryData) > -1;
- }
+const NewTopRatedMovies = topRatedMovies.filter((movie : IMovie) => {
+// Applying filter for the inserted text in search bar
+const movieTitle = movie.title
+    ? movie.title.toUpperCase()
+    : ''.toUpperCase();
+const queryData = searchQuery.toUpperCase();
+// The indexOf() method returns the first index at which a given element can be found in the array,
+//  or -1 if it is not present.
+return movieTitle.indexOf(queryData) > -1;
+}
 );
-setFilteredTopRatedMovies(newData);
-setSearchQuery(query);
+setFilteredTopRatedMovies(NewTopRatedMovies);
+setSearchQuery(searchQuery);
 } else {
 // Inserted text is blank
 // Update FilteredDataSource with masterDataSource
-setFilteredTopRatedMovies(masterTopRatedMovies);
-setSearchQuery(query);
+setFilteredTopRatedMovies(topRatedMovies);
+setSearchQuery(searchQuery);
 }
 }
 
-const renderItem: ListRenderItem<IMovie> = ({item}) => <TouchableOpacity onPress={(() => navigation.navigate('MovieDetails', { paramKey : item }))}><MovieCard movie={item} /></TouchableOpacity>;
+
+const renderItem: ListRenderItem<IMovie> = ({item}) => <MovieCard movie={item} handlePress={() => navigation.navigate('MovieDetails', { paramKey : item })} />;
 
   return (
-    <SafeArea style={{backgroundColor: 'beige'}} >
+    
+     <View style={{flex: 1, backgroundColor: 'skyblue'}}>
       <SearchContainer>
         <Searchbar 
-        placeholder="Search"
-        onChangeText={onChangeSearch}
+        placeholder="Search through top-rated movies"
+        onChangeText={(text)=> onSearch(text)}
         value={searchQuery}/>
         </SearchContainer>
       <MovieList 
        data={filteredTopRatedMovies}
        onEndReachedThreshold={0.5}
-       onEndReached={() => {pagerTopRated<5 && setPagerTopRated(pagerTopRated + 1)}}
+       onEndReached={() => {}}
        renderItem={renderItem}
        keyExtractor={( item : IMovie, index: number) => item.id}
       />
-    </SafeArea>
+      </View>
   );
 };

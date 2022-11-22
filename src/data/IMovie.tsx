@@ -15,7 +15,7 @@ vote_average: number,
 vote_count: number
 }
 
-export const DATA = [
+const DATA = [
     {
     "adult": false,
     "backdrop_path": "/y5Z0WesTjvn59jP6yo459eUsbli.jpg",

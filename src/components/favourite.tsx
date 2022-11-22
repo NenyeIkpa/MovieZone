@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext} from "react";
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { IMovie } from "../data/IMovie";
-import { getData, storeData } from "../data/database/database";
+import { FavouritesContext } from "./favourites-context";
 
 
-export const Favourite  = ({movie}: {movie: IMovie}) => {
-    console.log("movie is", movie)
-    const[favourites, setFavourites] = useState([]);
 
-    const addToFavourites = (movie: IMovie) => {
-        setFavourites([...favourites, movie]) //add new restaurant to exisitng favourites.
-    };
+export const Favourite  = (props) => {
 
-    const removeFromFavourites = (movie: IMovie) => {
-       const newFavourites = favourites.filter((it) => {
-            it.id !== movie.id
-        });
-        setFavourites(newFavourites);
-    }
+    const { addToFavourites, removeFromFavourites, favourites } = useContext(FavouritesContext);
 
-    const isFavourite = favourites.includes(movie);
-
-    useEffect(() => {
-        storeData(favourites);
-    }, [favourites]);
+    const isFavourite = favourites.includes(props.movie);
 
     return (
-        <TouchableOpacity style={styles.favouriteStyle} onPress={() => isFavourite? removeFromFavourites(movie) : addToFavourites(movie)}>
+        <TouchableOpacity style={styles.favouriteStyle} onPress={() => isFavourite? removeFromFavourites(props.movie) : addToFavourites(props.movie)}>
         <AntDesign  name={isFavourite? "heart" : "hearto"} size={24} color={isFavourite ? 'red' : 'white'} />
         </TouchableOpacity>
     )

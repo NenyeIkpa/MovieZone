@@ -30,10 +30,10 @@ resizeMode: cover;
 export const MovieDetails = ({ navigation, route, options}) => {
     const item = route.params.paramKey;
     const initialRoute = route.params.initialRouteName
-    console.log("initial route is ", initialRoute)
+    // console.log("initial route is ", initialRoute)
     const photoUrl = `https://image.tmdb.org/t/p/original${item.poster_path}`;
     const isPopularMoviesScreen = initialRoute === 'popular';
-    console.log(isPopularMoviesScreen);
+    // console.log(isPopularMoviesScreen);
 
     return (
       <>

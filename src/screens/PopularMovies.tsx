@@ -12,7 +12,6 @@ import { SafeArea } from '../utils/safe-area';
 import { MovieCard } from '../components/movie-card';
 import { IMovie } from '../data/IMovie';
 import { PopularMoviesContext }  from '../../App';
-import { FavouritesView } from '../components/favourites-view';
 
 const SearchContainer = styled.View`
 backgroundColor: skyblue;
@@ -65,14 +64,12 @@ setFilteredPopularMovies(popularMovies);
 setSearchQuery(searchQuery);
 }
 };
-console.log("filtered movies for popular movies screen ",filteredPopularMovies.length, filteredPopularMovies)
+console.log("filtered movies for popular movies screen ",filteredPopularMovies.length)
 
   return (
      <View style={{flex: 1, backgroundColor: 'skyblue'}}>
       <SearchContainer>
         <Searchbar 
-        icon={isToggled? 'heart': 'heart-outline'}
-        onIconPress={onFavouritesToggle}
         placeholder="Search through popular movies"
         value={searchQuery}
         onChangeText={(text) => onSearch(text)}
