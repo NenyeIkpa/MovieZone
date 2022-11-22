@@ -6,7 +6,7 @@ import { FavouritesContext } from '../components/favourites-context';
 
 
 
-export const Favourites = () => {
+export const Favourites = ({navigation}) => {
    
     const  {favourites}  = useContext(FavouritesContext);
 
@@ -25,8 +25,8 @@ export const Favourites = () => {
         </View>
         <FlatList style={{flex: 1}}
         data={favourites}
-        renderItem={({item}) =>{ return  <MovieCard movie={item} handlePress={() => null} />}}>
-        </FlatList>
+        renderItem={({item}) => <MovieCard movie={item} handlePress={() => navigation.navigate('MovieDetails', { paramKey : item })} />}
+        />
         </>
 }
         </SafeArea>
